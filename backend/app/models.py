@@ -97,6 +97,11 @@ class Item(ItemBase, table=True):
     owner_id: uuid.UUID = Field(
         foreign_key="user.id", nullable=False, ondelete="CASCADE"
     )
+    deleted_at: datetime | None = Field(
+        default=None,
+        sa_type=DateTime(timezone=True),  # type: ignore
+        index=True,
+    )
     owner: User | None = Relationship(back_populates="items")
 
 
@@ -105,6 +110,7 @@ class ItemPublic(ItemBase):
     id: uuid.UUID
     owner_id: uuid.UUID
     created_at: datetime | None = None
+    deleted_at: datetime | None = None
 
 
 class ItemsPublic(SQLModel):

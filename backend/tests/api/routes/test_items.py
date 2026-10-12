@@ -162,3 +162,38 @@ def test_delete_item_not_enough_permissions(
     assert response.status_code == 403
     content = response.json()
     assert content["detail"] == "Not enough permissions"
+
+
+def test_delete_item_is_soft_and_restorable(
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+) -> None:
+    item = create_random_item(db)
+    response = client.delete(
+        f"{settings.API_V1_STR}/items/{item.id}",
+        headers=superuser_token_headers,
+    )
+    assert response.status_code == 200
+
+    response = client.get(
+        f"{settings.API_V1_STR}/items/{item.id}",
+        headers=superuser_token_headers,
+    )
+    assert response.status_code == 404
+
+    response = client.post(
+        f"{settings.API_V1_STR}/items/{item.id}/restore",
+        headers=superuser_token_headers,
+    )
+    assert response.status_code == 200
+    assert response.json()["deleted_at"] is None
+
+
+def test_purge_item_requires_superuser(
+    client: TestClient, normal_user_token_headers: dict[str, str], db: Session
+) -> None:
+    item = create_random_item(db)
+    response = client.delete(
+        f"{settings.API_V1_STR}/items/{item.id}/purge",
+        headers=normal_user_token_headers,
+    )
+    assert response.status_code == 403

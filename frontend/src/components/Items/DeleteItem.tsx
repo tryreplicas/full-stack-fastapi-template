@@ -66,8 +66,8 @@ const DeleteItem = ({ id, onSuccess }: DeleteItemProps) => {
           <DialogHeader>
             <DialogTitle>Delete Item</DialogTitle>
             <DialogDescription>
-              This item will be permanently deleted. Are you sure? You will not
-              be able to undo this action.
+              This item will be moved to trash. You can restore it later from
+              the items list.
             </DialogDescription>
           </DialogHeader>
 
