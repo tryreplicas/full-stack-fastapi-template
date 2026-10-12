@@ -82,6 +82,10 @@ export type ItemPublic = {
      * Created At
      */
     created_at?: string | null;
+    /**
+     * Deleted At
+     */
+    deleted_at?: string | null;
 };
 
 /**
@@ -860,6 +864,66 @@ export type itemsDeleteItemResponses = {
 };
 
 export type itemsDeleteItemResponse = itemsDeleteItemResponses[keyof itemsDeleteItemResponses];
+
+export type itemsRestoreItemData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/items/{id}/restore';
+};
+
+export type itemsRestoreItemErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type itemsRestoreItemError = itemsRestoreItemErrors[keyof itemsRestoreItemErrors];
+
+export type itemsRestoreItemResponses = {
+    /**
+     * Successful Response
+     */
+    200: ItemPublic;
+};
+
+export type itemsRestoreItemResponse = itemsRestoreItemResponses[keyof itemsRestoreItemResponses];
+
+export type itemsPurgeItemData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/items/{id}/purge';
+};
+
+export type itemsPurgeItemErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type itemsPurgeItemError = itemsPurgeItemErrors[keyof itemsPurgeItemErrors];
+
+export type itemsPurgeItemResponses = {
+    /**
+     * Successful Response
+     */
+    200: Message;
+};
+
+export type itemsPurgeItemResponse = itemsPurgeItemResponses[keyof itemsPurgeItemResponses];
 
 export type itemsReadItemData = {
     body?: never;

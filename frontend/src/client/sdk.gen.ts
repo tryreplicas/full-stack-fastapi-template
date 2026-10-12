@@ -332,6 +332,34 @@ export class ItemsService {
     }
     
     /**
+     * Restore Item
+     *
+     * Restore a deleted item.
+     */
+    public static restoreItem<ThrowOnError extends boolean = true>(options: Options<itemsRestoreItemData, ThrowOnError>) {
+        return (options.client ?? client).post<itemsRestoreItemResponses, itemsRestoreItemErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/items/{id}/restore',
+            ...options
+        });
+    }
+    
+    /**
+     * Purge Item
+     *
+     * Permanently delete an item. Superusers only.
+     */
+    public static purgeItem<ThrowOnError extends boolean = true>(options: Options<itemsPurgeItemData, ThrowOnError>) {
+        return (options.client ?? client).delete<itemsPurgeItemResponses, itemsPurgeItemErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/items/{id}/purge',
+            ...options
+        });
+    }
+    
+    /**
      * Read Item
      *
      * Get item by ID.
