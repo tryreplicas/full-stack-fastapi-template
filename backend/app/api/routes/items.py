@@ -32,10 +32,11 @@ def read_items(
 
     if current_user.is_superuser:
         count_statement = select(func.count()).select_from(Item)
-        count = session.exec(count_statement).one()
         statement = select(Item)
         if not include_deleted:
+            count_statement = count_statement.where(col(Item.deleted_at).is_(None))
             statement = statement.where(col(Item.deleted_at).is_(None))
+        count = session.exec(count_statement).one()
         statement = statement.order_by(col(Item.created_at).desc()).offset(skip).limit(limit)
         items = session.exec(statement).all()
     else:
