@@ -86,3 +86,10 @@ Check the file [release-notes.md](./release-notes.md).
 ## License
 
 The Full Stack FastAPI Template is licensed under the terms of the MIT license.
+
+## Debugging tips
+
+- Check container logs with `docker compose logs -f backend` when the API misbehaves.
+- Open the interactive API docs at `/docs` to replay requests without the frontend.
+- Mailpit (local email) is available in the Compose stack to inspect password-recovery emails.
+- If the frontend client is out of date, regenerate it with `bash ./scripts/generate-client.sh`.
