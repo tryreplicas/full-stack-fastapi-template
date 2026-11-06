@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app import crud
-from app.api.deps import CurrentUser, SessionDep, get_current_active_superuser
+from app.api.deps import AuthenticatedUser, DbSession, get_current_active_superuser
 from app.core import security
 from app.core.config import settings
 from app.models import Message, NewPassword, Token, UserPublic, UserUpdate
@@ -22,7 +22,7 @@ router = APIRouter(tags=["login"])
 
 @router.post("/login/access-token")
 def login_access_token(
-    session: SessionDep, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    session: DbSession, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> Token:
     """
     OAuth2 compatible token login, get an access token for future requests
@@ -43,7 +43,7 @@ def login_access_token(
 
 
 @router.post("/login/test-token", response_model=UserPublic)
-def test_token(current_user: CurrentUser) -> Any:
+def test_token(current_user: AuthenticatedUser) -> Any:
     """
     Test access token
     """
@@ -51,7 +51,7 @@ def test_token(current_user: CurrentUser) -> Any:
 
 
 @router.post("/password-recovery/{email}")
-def recover_password(email: str, session: SessionDep) -> Message:
+def recover_password(email: str, session: DbSession) -> Message:
     """
     Password Recovery
     """
@@ -75,7 +75,7 @@ def recover_password(email: str, session: SessionDep) -> Message:
 
 
 @router.post("/reset-password/")
-def reset_password(session: SessionDep, body: NewPassword) -> Message:
+def reset_password(session: DbSession, body: NewPassword) -> Message:
     """
     Reset password
     """
@@ -102,7 +102,7 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
     dependencies=[Depends(get_current_active_superuser)],
     response_class=HTMLResponse,
 )
-def recover_password_html_content(email: str, session: SessionDep) -> Any:
+def recover_password_html_content(email: str, session: DbSession) -> Any:
     """
     HTML Content for Password Recovery
     """

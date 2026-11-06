@@ -27,7 +27,7 @@ interface DeleteUserProps {
 const DeleteUser = ({ id, onSuccess }: DeleteUserProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { notifySuccess, notifyError } = useCustomToast()
   const { handleSubmit } = useForm()
 
   const deleteUser = async (id: string) => {
@@ -37,11 +37,11 @@ const DeleteUser = ({ id, onSuccess }: DeleteUserProps) => {
   const mutation = useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
-      showSuccessToast("The user was deleted successfully")
+      notifySuccess("The user was deleted successfully")
       setIsOpen(false)
       onSuccess()
     },
-    onError: handleError.bind(showErrorToast),
+    onError: handleError.bind(notifyError),
     onSettled: () => {
       queryClient.invalidateQueries()
     },

@@ -6,8 +6,8 @@ from sqlmodel import col, delete, func, select
 
 from app import crud
 from app.api.deps import (
-    CurrentUser,
-    SessionDep,
+    AuthenticatedUser,
+    DbSession,
     get_current_active_superuser,
 )
 from app.core.config import settings
@@ -34,7 +34,7 @@ router = APIRouter(prefix="/users", tags=["users"])
     dependencies=[Depends(get_current_active_superuser)],
     response_model=UsersPublic,
 )
-def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+def read_users(session: DbSession, skip: int = 0, limit: int = 100) -> Any:
     """
     Retrieve users.
     """
@@ -54,7 +54,7 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 @router.post(
     "/", dependencies=[Depends(get_current_active_superuser)], response_model=UserPublic
 )
-def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
+def create_user(*, session: DbSession, user_in: UserCreate) -> Any:
     """
     Create new user.
     """
@@ -80,7 +80,7 @@ def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
 
 @router.patch("/me", response_model=UserPublic)
 def update_user_me(
-    *, session: SessionDep, user_in: UserUpdateMe, current_user: CurrentUser
+    *, session: DbSession, user_in: UserUpdateMe, current_user: AuthenticatedUser
 ) -> Any:
     """
     Update own user.
@@ -102,7 +102,7 @@ def update_user_me(
 
 @router.patch("/me/password", response_model=Message)
 def update_password_me(
-    *, session: SessionDep, body: UpdatePassword, current_user: CurrentUser
+    *, session: DbSession, body: UpdatePassword, current_user: AuthenticatedUser
 ) -> Any:
     """
     Update own password.
@@ -122,7 +122,7 @@ def update_password_me(
 
 
 @router.get("/me", response_model=UserPublic)
-def read_user_me(current_user: CurrentUser) -> Any:
+def read_user_me(current_user: AuthenticatedUser) -> Any:
     """
     Get current user.
     """
@@ -130,7 +130,7 @@ def read_user_me(current_user: CurrentUser) -> Any:
 
 
 @router.delete("/me", response_model=Message)
-def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
+def delete_user_me(session: DbSession, current_user: AuthenticatedUser) -> Any:
     """
     Delete own user.
     """
@@ -144,7 +144,7 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
 
 
 @router.post("/signup", response_model=UserPublic)
-def register_user(session: SessionDep, user_in: UserRegister) -> Any:
+def register_user(session: DbSession, user_in: UserRegister) -> Any:
     """
     Create new user without the need to be logged in.
     """
@@ -161,7 +161,7 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
 
 @router.get("/{user_id}", response_model=UserPublic)
 def read_user_by_id(
-    user_id: uuid.UUID, session: SessionDep, current_user: CurrentUser
+    user_id: uuid.UUID, session: DbSession, current_user: AuthenticatedUser
 ) -> Any:
     """
     Get a specific user by id.
@@ -186,7 +186,7 @@ def read_user_by_id(
 )
 def update_user(
     *,
-    session: SessionDep,
+    session: DbSession,
     user_id: uuid.UUID,
     user_in: UserUpdate,
 ) -> Any:
@@ -213,7 +213,7 @@ def update_user(
 
 @router.delete("/{user_id}", dependencies=[Depends(get_current_active_superuser)])
 def delete_user(
-    session: SessionDep, current_user: CurrentUser, user_id: uuid.UUID
+    session: DbSession, current_user: AuthenticatedUser, user_id: uuid.UUID
 ) -> Message:
     """
     Delete a user.

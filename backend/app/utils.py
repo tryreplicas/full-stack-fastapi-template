@@ -23,6 +23,7 @@ class EmailData:
 
 
 def render_email_template(*, template_name: str, context: dict[str, Any]) -> str:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     template_str = (
         Path(__file__).parent / "email-templates" / template_name
     ).read_text()
@@ -37,6 +38,7 @@ def send_email(
     subject: str = "",
     html_content: str = "",
 ) -> None:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     assert settings.emails_enabled, "no provided configuration for email variables"
     assert settings.EMAILS_FROM_EMAIL  # For type checker
     message = emails.message.Message(

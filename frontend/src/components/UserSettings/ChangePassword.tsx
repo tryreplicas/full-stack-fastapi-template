@@ -39,7 +39,7 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>
 
 const ChangePassword = () => {
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { notifySuccess, notifyError } = useCustomToast()
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onSubmit",
@@ -55,10 +55,10 @@ const ChangePassword = () => {
     mutationFn: (data: UpdatePassword) =>
       UsersService.updatePasswordMe({ body: data }),
     onSuccess: () => {
-      showSuccessToast("Password updated successfully")
+      notifySuccess("Password updated successfully")
       form.reset()
     },
-    onError: handleError.bind(showErrorToast),
+    onError: handleError.bind(notifyError),
   })
 
   const onSubmit = async (data: FormData) => {

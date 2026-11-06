@@ -1,19 +1,19 @@
 import { toast } from "sonner"
 
 const useCustomToast = () => {
-  const showSuccessToast = (description: string) => {
+  const notifySuccess = (description: string) => {
     toast.success("Success!", {
       description,
     })
   }
 
-  const showErrorToast = (description: string) => {
+  const notifyError = (description: string) => {
     toast.error("Something went wrong!", {
       description,
     })
   }
 
-  return { showSuccessToast, showErrorToast }
+  return { notifySuccess, notifyError }
 }
 
 export default useCustomToast

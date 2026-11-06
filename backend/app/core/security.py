@@ -20,6 +20,7 @@ ALGORITHM = "HS256"
 
 
 def create_access_token(subject: str | Any, expires_delta: timedelta) -> str:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     expire = datetime.now(UTC) + expires_delta
     to_encode = {"exp": expire, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
@@ -29,6 +30,7 @@ def create_access_token(subject: str | Any, expires_delta: timedelta) -> str:
 def verify_password(
     plain_password: str, hashed_password: str
 ) -> tuple[bool, str | None]:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     return password_hash.verify_and_update(plain_password, hashed_password)
 
 

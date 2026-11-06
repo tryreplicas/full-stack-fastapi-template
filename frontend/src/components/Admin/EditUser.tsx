@@ -59,7 +59,7 @@ interface EditUserProps {
 const EditUser = ({ user, onSuccess }: EditUserProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { notifySuccess, notifyError } = useCustomToast()
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -77,11 +77,11 @@ const EditUser = ({ user, onSuccess }: EditUserProps) => {
     mutationFn: (data: FormData) =>
       UsersService.updateUser({ path: { user_id: user.id }, body: data }),
     onSuccess: () => {
-      showSuccessToast("User updated successfully")
+      notifySuccess("User updated successfully")
       setIsOpen(false)
       onSuccess()
     },
-    onError: handleError.bind(showErrorToast),
+    onError: handleError.bind(notifyError),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] })
     },

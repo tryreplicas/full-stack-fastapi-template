@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useAuth from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/class-names"
 import { handleError } from "@/utils"
 
 const formSchema = z.object({
@@ -30,7 +30,7 @@ type FormData = z.infer<typeof formSchema>
 
 const UserInformation = () => {
   const queryClient = useQueryClient()
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { notifySuccess, notifyError } = useCustomToast()
   const [editMode, setEditMode] = useState(false)
   const { user: currentUser } = useAuth()
 
@@ -52,10 +52,10 @@ const UserInformation = () => {
     mutationFn: (data: UserUpdateMe) =>
       UsersService.updateUserMe({ body: data }),
     onSuccess: () => {
-      showSuccessToast("User updated successfully")
+      notifySuccess("User updated successfully")
       toggleEditMode()
     },
-    onError: handleError.bind(showErrorToast),
+    onError: handleError.bind(notifyError),
     onSettled: () => {
       queryClient.invalidateQueries()
     },

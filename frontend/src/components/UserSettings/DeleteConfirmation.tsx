@@ -20,17 +20,17 @@ import { handleError } from "@/utils"
 
 const DeleteConfirmation = () => {
   const queryClient = useQueryClient()
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { notifySuccess, notifyError } = useCustomToast()
   const { handleSubmit } = useForm()
   const { logout } = useAuth()
 
   const mutation = useMutation({
     mutationFn: () => UsersService.deleteUserMe(),
     onSuccess: () => {
-      showSuccessToast("Your account has been successfully deleted")
+      notifySuccess("Your account has been successfully deleted")
       logout()
     },
-    onError: handleError.bind(showErrorToast),
+    onError: handleError.bind(notifyError),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] })
     },

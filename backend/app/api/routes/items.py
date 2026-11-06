@@ -4,7 +4,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from sqlmodel import col, func, select
 
-from app.api.deps import CurrentUser, SessionDep
+from app.api.deps import AuthenticatedUser, DbSession
 from app.models import Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate, Message
 
 router = APIRouter(prefix="/items", tags=["items"])
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/items", tags=["items"])
 
 @router.get("/", response_model=ItemsPublic)
 def read_items(
-    session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
+    session: DbSession, current_user: AuthenticatedUser, skip: int = 0, limit: int = 100
 ) -> Any:
     """
     Retrieve items.
@@ -46,7 +46,7 @@ def read_items(
 
 
 @router.get("/{id}", response_model=ItemPublic)
-def read_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
+def read_item(session: DbSession, current_user: AuthenticatedUser, id: uuid.UUID) -> Any:
     """
     Get item by ID.
     """
@@ -60,7 +60,7 @@ def read_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> 
 
 @router.post("/", response_model=ItemPublic)
 def create_item(
-    *, session: SessionDep, current_user: CurrentUser, item_in: ItemCreate
+    *, session: DbSession, current_user: AuthenticatedUser, item_in: ItemCreate
 ) -> Any:
     """
     Create new item.
@@ -75,8 +75,8 @@ def create_item(
 @router.put("/{id}", response_model=ItemPublic)
 def update_item(
     *,
-    session: SessionDep,
-    current_user: CurrentUser,
+    session: DbSession,
+    current_user: AuthenticatedUser,
     id: uuid.UUID,
     item_in: ItemUpdate,
 ) -> Any:
@@ -98,7 +98,7 @@ def update_item(
 
 @router.delete("/{id}")
 def delete_item(
-    session: SessionDep, current_user: CurrentUser, id: uuid.UUID
+    session: DbSession, current_user: AuthenticatedUser, id: uuid.UUID
 ) -> Message:
     """
     Delete an item.

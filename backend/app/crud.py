@@ -8,6 +8,7 @@ from app.models import Item, ItemCreate, User, UserCreate, UserUpdate
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     db_obj = User.model_validate(
         user_create, update={"hashed_password": get_password_hash(user_create.password)}
     )
@@ -18,6 +19,7 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
 
 
 def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> Any:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     user_data = user_in.model_dump(exclude_unset=True)
     extra_data = {}
     if "password" in user_data:

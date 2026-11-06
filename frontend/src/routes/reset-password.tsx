@@ -68,7 +68,7 @@ export const Route = createFileRoute("/reset-password")({
 
 function ResetPassword() {
   const { token } = Route.useSearch()
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { notifySuccess, notifyError } = useCustomToast()
   const navigate = useNavigate()
 
   const form = useForm<FormData>({
@@ -85,11 +85,11 @@ function ResetPassword() {
     mutationFn: (data: { new_password: string; token: string }) =>
       LoginService.resetPassword({ body: data }),
     onSuccess: () => {
-      showSuccessToast("Password updated successfully")
+      notifySuccess("Password updated successfully")
       form.reset()
       navigate({ to: "/login" })
     },
-    onError: handleError.bind(showErrorToast),
+    onError: handleError.bind(notifyError),
   })
 
   const onSubmit = (data: FormData) => {

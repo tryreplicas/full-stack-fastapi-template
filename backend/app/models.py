@@ -7,6 +7,7 @@ from sqlmodel import Field, Relationship, SQLModel
 
 
 def get_datetime_utc() -> datetime:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     return datetime.now(UTC)
 
 
