@@ -8,12 +8,12 @@ from tests.utils.item import create_random_item
 
 
 def test_create_item(
-    client: TestClient, superuser_token_headers: dict[str, str]
+    api_client: TestClient, admin_headers: dict[str, str]
 ) -> None:
     data = {"title": "Foo", "description": "Fighters"}
-    response = client.post(
+    response = api_client.post(
         f"{settings.API_V1_STR}/items/",
-        headers=superuser_token_headers,
+        headers=admin_headers,
         json=data,
     )
     assert response.status_code == 200
@@ -25,12 +25,12 @@ def test_create_item(
 
 
 def test_read_item(
-    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+    api_client: TestClient, admin_headers: dict[str, str], db: Session
 ) -> None:
     item = create_random_item(db)
-    response = client.get(
+    response = api_client.get(
         f"{settings.API_V1_STR}/items/{item.id}",
-        headers=superuser_token_headers,
+        headers=admin_headers,
     )
     assert response.status_code == 200
     content = response.json()
@@ -41,11 +41,11 @@ def test_read_item(
 
 
 def test_read_item_not_found(
-    client: TestClient, superuser_token_headers: dict[str, str]
+    api_client: TestClient, admin_headers: dict[str, str]
 ) -> None:
-    response = client.get(
+    response = api_client.get(
         f"{settings.API_V1_STR}/items/{uuid.uuid4()}",
-        headers=superuser_token_headers,
+        headers=admin_headers,
     )
     assert response.status_code == 404
     content = response.json()
@@ -53,10 +53,10 @@ def test_read_item_not_found(
 
 
 def test_read_item_not_enough_permissions(
-    client: TestClient, normal_user_token_headers: dict[str, str], db: Session
+    api_client: TestClient, normal_user_token_headers: dict[str, str], db: Session
 ) -> None:
     item = create_random_item(db)
-    response = client.get(
+    response = api_client.get(
         f"{settings.API_V1_STR}/items/{item.id}",
         headers=normal_user_token_headers,
     )
@@ -66,13 +66,13 @@ def test_read_item_not_enough_permissions(
 
 
 def test_read_items(
-    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+    api_client: TestClient, admin_headers: dict[str, str], db: Session
 ) -> None:
     create_random_item(db)
     create_random_item(db)
-    response = client.get(
+    response = api_client.get(
         f"{settings.API_V1_STR}/items/",
-        headers=superuser_token_headers,
+        headers=admin_headers,
     )
     assert response.status_code == 200
     content = response.json()
@@ -80,13 +80,13 @@ def test_read_items(
 
 
 def test_update_item(
-    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+    api_client: TestClient, admin_headers: dict[str, str], db: Session
 ) -> None:
     item = create_random_item(db)
     data = {"title": "Updated title", "description": "Updated description"}
-    response = client.put(
+    response = api_client.put(
         f"{settings.API_V1_STR}/items/{item.id}",
-        headers=superuser_token_headers,
+        headers=admin_headers,
         json=data,
     )
     assert response.status_code == 200
@@ -98,12 +98,12 @@ def test_update_item(
 
 
 def test_update_item_not_found(
-    client: TestClient, superuser_token_headers: dict[str, str]
+    api_client: TestClient, admin_headers: dict[str, str]
 ) -> None:
     data = {"title": "Updated title", "description": "Updated description"}
-    response = client.put(
+    response = api_client.put(
         f"{settings.API_V1_STR}/items/{uuid.uuid4()}",
-        headers=superuser_token_headers,
+        headers=admin_headers,
         json=data,
     )
     assert response.status_code == 404
@@ -112,11 +112,11 @@ def test_update_item_not_found(
 
 
 def test_update_item_not_enough_permissions(
-    client: TestClient, normal_user_token_headers: dict[str, str], db: Session
+    api_client: TestClient, normal_user_token_headers: dict[str, str], db: Session
 ) -> None:
     item = create_random_item(db)
     data = {"title": "Updated title", "description": "Updated description"}
-    response = client.put(
+    response = api_client.put(
         f"{settings.API_V1_STR}/items/{item.id}",
         headers=normal_user_token_headers,
         json=data,
@@ -127,12 +127,12 @@ def test_update_item_not_enough_permissions(
 
 
 def test_delete_item(
-    client: TestClient, superuser_token_headers: dict[str, str], db: Session
+    api_client: TestClient, admin_headers: dict[str, str], db: Session
 ) -> None:
     item = create_random_item(db)
-    response = client.delete(
+    response = api_client.delete(
         f"{settings.API_V1_STR}/items/{item.id}",
-        headers=superuser_token_headers,
+        headers=admin_headers,
     )
     assert response.status_code == 200
     content = response.json()
@@ -140,11 +140,11 @@ def test_delete_item(
 
 
 def test_delete_item_not_found(
-    client: TestClient, superuser_token_headers: dict[str, str]
+    api_client: TestClient, admin_headers: dict[str, str]
 ) -> None:
-    response = client.delete(
+    response = api_client.delete(
         f"{settings.API_V1_STR}/items/{uuid.uuid4()}",
-        headers=superuser_token_headers,
+        headers=admin_headers,
     )
     assert response.status_code == 404
     content = response.json()
@@ -152,10 +152,10 @@ def test_delete_item_not_found(
 
 
 def test_delete_item_not_enough_permissions(
-    client: TestClient, normal_user_token_headers: dict[str, str], db: Session
+    api_client: TestClient, normal_user_token_headers: dict[str, str], db: Session
 ) -> None:
     item = create_random_item(db)
-    response = client.delete(
+    response = api_client.delete(
         f"{settings.API_V1_STR}/items/{item.id}",
         headers=normal_user_token_headers,
     )

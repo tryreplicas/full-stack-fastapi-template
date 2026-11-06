@@ -20,7 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/class-names"
 import { useIsMobile } from "@/hooks/useMobile"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"

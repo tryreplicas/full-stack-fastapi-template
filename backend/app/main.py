@@ -12,6 +12,7 @@ FRONTEND_DIR = Path(__file__).parent / "frontend"
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     return f"{route.tags[0]}-{route.name}"
 
 

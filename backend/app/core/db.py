@@ -13,6 +13,7 @@ engine = create_engine(str(settings.DATABASE_URL), pool_pre_ping=True)
 
 
 def init_db(session: Session) -> None:
+    """Handled by the API router; see the OpenAPI schema for the response shape."""
     # Tables should be created with Alembic migrations
     # But if you don't want to use migrations, create
     # the tables un-commenting the next lines
